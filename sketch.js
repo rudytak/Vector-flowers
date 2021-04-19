@@ -32,8 +32,8 @@ function draw() {
 function drawBranch(bJSON) {
     if (bJSON.branches.length == 0) return
 
-    var r_ang = 2 * PI / (bJSON.branches.length + 0.5)
-    var randomisation = 2 * PI / ((bJSON.branches.length + 1) ** 2)
+    var r_ang = 2 * PI / (bJSON.branches.length)
+    var randomisation = 2 * PI / ((bJSON.branches.length) ** 2)
     var total = PI;
 
     for (var b = 0; b < bJSON.branches.length; b++) {
