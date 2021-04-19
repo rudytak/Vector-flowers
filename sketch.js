@@ -1,5 +1,6 @@
 var pdf;
-var c;
+var c, pg;
+var tf = new Transformer();
 
 var img;
 var _json;
@@ -14,14 +15,20 @@ function setup() {
     // Note that to use SVG Renderer, you must include p5.svg library
     c = createCanvas(600, 600, SVG);
     pdf = createPDF();
+    pg = createGraphics(100, 100);
 }
 
 function draw() {
     pdf.beginRecord();
 
-    background(255);
+    background(255, 255, 255, 255);
+    pg.background(255)
 
-    translate(width / 2, height / 2)
+    strokeWeight(1.5);
+    image(pg, 0, 0, width, height);
+    //image(img, 0, 0, width, height);
+
+    tf.translate(width / 2, height / 2)
     drawBranch(_json);
 
     noLoop();
@@ -42,14 +49,23 @@ function drawBranch(bJSON) {
         var ang = (r_ang + random(-randomisation, randomisation));
         total += ang;
 
-        rotate(total);
-        translate(bran.length, 0)
+        tf.rotate(total);
+        tf.translate(bran.length, 0);
 
-        line(0, 0, -bran.length, 0)
+        stroke(getCol(tf.x, tf.y));
+        line(0, 0, -bran.length, 0);
 
-        drawBranch(bran)
+        drawBranch(bran);
 
-        translate(-bran.length, 0)
-        rotate(-total);
+        tf.translate(-bran.length, 0);
+        tf.rotate(-total);
     }
+}
+
+function getCol(x, y) {
+    var _x = map(x, 0, width, 0, img.width);
+    var _y = map(y, 0, height, 0, img.height);
+
+    var im = img.get(_x, _y);
+    return ([im[0], im[1], im[2]]);
 }
