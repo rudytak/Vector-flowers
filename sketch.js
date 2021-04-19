@@ -21,7 +21,8 @@ function draw() {
 
     background(255);
 
-
+    translate(width / 2, height / 2)
+    drawBranch(_json);
 
     noLoop();
     pdf.save();
@@ -29,5 +30,26 @@ function draw() {
 }
 
 function drawBranch(bJSON) {
+    if (bJSON.branches.length == 0) return
 
+    var r_ang = 2 * PI / bJSON.branches.length
+    var randomisation = 2 * PI / (bJSON.branches.length ** 2)
+    var total = 0;
+
+    for (var b = 0; b < bJSON.branches.length; b++) {
+        var bran = bJSON.branches[b];
+
+        var ang = (r_ang + random(-randomisation, randomisation));
+        total += ang;
+
+        rotate(total);
+        translate(bran.length, 0)
+
+        line(0, 0, -bran.length, 0)
+
+        drawBranch(bran)
+
+        translate(-bran.length, 0)
+        rotate(-total);
+    }
 }

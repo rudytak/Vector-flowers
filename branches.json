@@ -1,0 +1,18 @@
+{
+    "branches": [{
+            "length": 150,
+            "branches": [{
+                "length": 50,
+                "branches": []
+            }]
+        },
+        {
+            "length": 175,
+            "branches": []
+        },
+        {
+            "length": 200,
+            "branches": []
+        }
+    ]
+}
