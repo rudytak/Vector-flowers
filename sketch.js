@@ -2,6 +2,8 @@ var pdf;
 var c, pg;
 var tf = new Transformer();
 
+var done = false;
+
 var img;
 var _json;
 
@@ -18,7 +20,19 @@ function setup() {
     pg = createGraphics(100, 100);
 }
 
+function keyPressed() {
+    if (keyCode == 80) {
+        pdf.save();
+    }
+}
+
+function mousePressed() {
+    draw();
+}
+
 function draw() {
+    tf.push();
+
     pdf.beginRecord();
 
     background(255, 255, 255, 255);
@@ -29,22 +43,13 @@ function draw() {
     //image(img, 0, 0, width, height);
 
     tf.translate(width / 2, height / 2)
-    drawBranch(_json);
 
-    noLoop();
-    pdf.save();
-
-}
-
-function drawBranch(bJSON) {
-    if (bJSON.branches.length == 0) return
-
-    var r_ang = 2 * PI / (bJSON.branches.length)
-    var randomisation = 2 * PI / ((bJSON.branches.length) ** 2)
+    var r_ang = 2 * PI / (_json.branches.length)
+    var randomisation = 2 * PI / ((_json.branches.length) ** 2)
     var total = PI;
 
-    for (var b = 0; b < bJSON.branches.length; b++) {
-        var bran = bJSON.branches[b];
+    for (var b = 0; b < _json.branches.length; b++) {
+        var bran = _json.branches[b];
 
         var ang = (r_ang + random(-randomisation, randomisation));
         total += ang;
@@ -55,10 +60,37 @@ function drawBranch(bJSON) {
         stroke(getCol(tf.x, tf.y));
         line(0, 0, -bran.length, 0);
 
-        drawBranch(bran);
+        drawBranch(bran, 1);
 
         tf.translate(-bran.length, 0);
         tf.rotate(-total);
+    }
+
+    noLoop();
+
+    tf.pop();
+}
+
+function drawBranch(bJSON, depth) {
+    if (bJSON.branches.length == 0) return
+
+    var randomisation = PI / (3 * depth)
+
+    for (var b = 0; b < bJSON.branches.length; b++) {
+        var bran = bJSON.branches[b];
+
+        var ang = random(-randomisation, randomisation);
+
+        tf.rotate(ang);
+        tf.translate(bran.length, 0);
+
+        stroke(getCol(tf.x, tf.y));
+        line(0, 0, -bran.length, 0);
+
+        drawBranch(bran, depth + 1);
+
+        tf.translate(-bran.length, 0);
+        tf.rotate(-ang);
     }
 }
 
